@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Unauthorized access.</title>
+        <title>不正アクセス.</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
 		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
@@ -50,12 +50,12 @@
 				<i class="fa fa-ban" style="font-size:120px;color:#FF5959;margin-bottom:30px;"></i>
                 <div class="title">Unauthorized access</div>
 				@if(Auth::guest())
-					<a href="{{ url('/') }}">Homepage</a> | 
-					<a href="javascript:history.back()">Go Back</a>
-				@else
-					<a href="{{ url(config('laraadmin.adminRoute')) }}">Dashboard.</a> | 
-					<a href="javascript:history.back()">Go Back</a>
-				@endif
+                    <a href="{{ url('/') }}">Homepage</a> | 
+                    <a href="javascript:history.back()">戻る</a>
+                @else
+                    <a href="{{ url(config('laraadmin.adminRoute')) }}">ダッシュボード.</a> | 
+                    <a href="javascript:history.back()">戻る</a>
+                @endif
             </div>
         </div>
     </body>

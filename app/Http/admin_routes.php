@@ -3,6 +3,8 @@
 /* ================== Homepage ================== */
 // Route::get('/', 'HomeController@index');
 Route::get('/', 'LA\DashboardController@index');
+Route::post('/imported', 'LA\Sample_case_ScreensController@imported');
+
 Route::auth();
 
 
@@ -75,4 +77,14 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	/* ================== Case_Screens ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/case_screens', 'LA\Case_ScreensController');
 	Route::get(config('laraadmin.adminRoute') . '/case_screen_dt_ajax', 'LA\Case_ScreensController@dtajax');
+
+
+	/* ================== Sample_case_Screens ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/sample_case_screens', 'LA\Sample_case_ScreensController');
+	Route::get(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax', 'LA\Sample_case_ScreensController@dtajax');
+
+	/* ================== Import Excel ================== */
+
+	Route::resource(config('laraadmin.adminRoute') . '/import', 'LA\Sample_case_ScreensController@import');
+
 });

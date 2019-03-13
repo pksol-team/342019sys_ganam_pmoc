@@ -1,8 +1,8 @@
 @extends('la.layouts.app')
 
-@section('htmlheader_title') Dashboard @endsection
-@section('contentheader_title') Dashboard @endsection
-@section('contentheader_description') Rose Group @endsection
+@section('htmlheader_title') ダッシュボード @endsection
+@section('contentheader_title') ダッシュボード @endsection
+@section('contentheader_description') ローズグループ @endsection
 
 @section('main-content')
 <!-- Main content -->
@@ -483,8 +483,8 @@
 (function($) {
 	$('body').pgNotification({
 		style: 'circle',
-		title: 'Rose Group',
-		message: "Welcome to Rose Group...",
+		title: 'ローズグループ',
+		message: "ローズグループへようこそ...",
 		position: "top-right",
 		timeout: 0,
 		type: "success",

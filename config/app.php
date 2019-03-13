@@ -157,6 +157,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Dwij\Laraadmin\LAProvider::class,
+        
+        Cyberduck\LaravelExcel\ExcelServiceProvider::class,
 
     ],
 

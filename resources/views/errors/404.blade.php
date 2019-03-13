@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Page / Record not found.</title>
+        <title>ページ / 記録が見当たりませんでした.</title>
 
         <link href="https://fonts.googleapis.com/css?family=Roboto:200,400" rel="stylesheet" type="text/css">
 		<link href="{{ asset('la-assets/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
@@ -55,12 +55,12 @@
 				@endif
 				
 				@if(Auth::guest())
-					<a href="{{ url('/') }}">Homepage</a> | 
-					<a href="javascript:history.back()">Go Back</a>
-				@else
-					<a href="{{ url(config('laraadmin.adminRoute')) }}">Dashboard.</a> | 
-					<a href="javascript:history.back()">Go Back</a>
-				@endif
+                    <a href="{{ url('/') }}">Homepage</a> | 
+                    <a href="javascript:history.back()">戻る</a>
+                @else
+                    <a href="{{ url(config('laraadmin.adminRoute')) }}">ダッシュボード.</a> | 
+                    <a href="javascript:history.back()">戻る</a>
+                @endif
             </div>
         </div>
     </body>

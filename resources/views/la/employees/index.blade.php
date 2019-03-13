@@ -1,14 +1,14 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "Users")
-@section("contentheader_description", "users listing")
-@section("section", "Users")
-@section("sub_section", "Listing")
-@section("htmlheader_title", "Users Listing")
+@section("contentheader_title", "ユーザー")
+@section("contentheader_description", "ユーザー リスティング")
+@section("section", "ユーザー")
+@section("sub_section", "リスティング")
+@section("htmlheader_title", "ユーザー リスティング")
 
 @section("headerElems")
 @la_access("Employees", "create")
-	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">Add User</button>
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">ユーザーを追加する</button>
 @endla_access
 @endsection
 
@@ -50,7 +50,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">Add User</h4>
+				<h4 class="modal-title" id="myModalLabel">ユーザーを追加する</h4>
 			</div>
 
 
@@ -74,8 +74,8 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				{!! Form::submit( 'Submit', ['class'=>'btn btn-success']) !!}
+				<button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+				{!! Form::submit( '提出する', ['class'=>'btn btn-success']) !!}
 			</div>
 			{!! Form::close() !!}
 		</div>
@@ -102,7 +102,8 @@ $(function () {
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
-			searchPlaceholder: "Search"
+			searchPlaceholder: "サーチ",
+            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json"
 		},
 		@if($show_actions)
 		columnDefs: [ { orderable: false, targets: [-1] }],

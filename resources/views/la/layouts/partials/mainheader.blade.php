@@ -1,12 +1,11 @@
 <!-- Main Header -->
 <header class="main-header">
 	<?php $UserId = Auth::user()->id;
-
 	$RoleTable = DB::table('role_user')->WHERE('user_id', $UserId)->first();
 	if ($RoleTable->role_id != 1) { ?>
 		@push('scripts')
 		<script>
-			$('ul.sidebar-menu li:nth-child(3)').css('display', 'none');
+			// $('ul.sidebar-menu li:nth-child(3)').css('display', 'none');
 		</script>
 		@endpush
 	<?php } ?>
@@ -19,11 +18,10 @@
 		<!-- logo for regular state and mobile devices -->
 		<!-- <span class="logo-lg"><b>{{ LAConfigs::getByKey('sitename_part1') }}</b> -->
 		 <!-- {{ LAConfigs::getByKey('sitename_part2') }}</span> -->
-		 <img src="/la-assets/img/logo-small.png" width="175" class="img" height="45" alt="Marhaba Logistics" />
+		 <img src="/la-assets/img/logo-small.png" width="175" class="img" height="45" alt="Rose Group" />
 
 	</a>
 	@endif
-
 	<!-- Header Navbar -->
 	<nav class="navbar navbar-static-top" role="navigation">
 	@if(LAConfigs::getByKey('layout') == 'layout-top-nav')

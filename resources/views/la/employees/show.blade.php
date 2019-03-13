@@ -58,11 +58,11 @@
 	</div> -->
 
 	<ul data-toggle="ajax-tab" class="nav nav-tabs profile" role="tablist">
-		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" data-toggle="tooltip" data-placement="right" title="Back to Employees"><i class="fa fa-chevron-left"></i></a></li>
-		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-info" data-target="#tab-info"><i class="fa fa-bars"></i> General Info</a></li>
+		<li class=""><a href="{{ url(config('laraadmin.adminRoute') . '/employees') }}" data-toggle="tooltip" data-placement="right" title="戻る ユーザー"><i class="fa fa-chevron-left"></i></a></li>
+		<li class="active"><a role="tab" data-toggle="tab" class="active" href="#tab-info" data-target="#tab-info"><i class="fa fa-bars"></i> 一般的な情報</a></li>
 		<!-- <li class=""><a role="tab" data-toggle="tab" href="#tab-timeline" data-target="#tab-timeline"><i class="fa fa-clock-o"></i> Timeline</a></li> -->
 		@if($employee->id == Auth::user()->id || Entrust::hasRole("SUPER_ADMIN"))
-			<li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> Account settings</a></li>
+			<li class=""><a role="tab" data-toggle="tab" href="#tab-account-settings" data-target="#tab-account-settings"><i class="fa fa-key"></i> アカウント設定</a></li>
 		@endif
 	</ul>
 
@@ -71,7 +71,7 @@
 			<div class="tab-content">
 				<div class="panel infolist">
 					<div class="panel-default panel-heading">
-						<h4>General Info</h4>
+						<h4>一般的な情報</h4>
 					</div>
 					<div class="panel-body">
 						@la_display($module, 'name')
@@ -189,7 +189,7 @@
 					{{ csrf_field() }}
 					<div class="panel">
 						<div class="panel-default panel-heading">
-							<h4>Account settings</h4>
+							<h4>アカウント設定</h4>
 						</div>
 						<div class="panel-body">
 							@if (count($errors) > 0)
@@ -205,20 +205,20 @@
 								<p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('success_message') }}</p>
 							@endif
 							<div class="form-group">
-								<label for="password" class=" col-md-2">Password</label>
+								<label for="password" class=" col-md-2">パスワード</label>
 								<div class=" col-md-10">
-									<input type="password" name="password" value="" id="password" class="form-control" placeholder="Password" autocomplete="off" required="required" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
+									<input type="password" name="password" value="" id="password" class="form-control" placeholder="パスワード" autocomplete="off" required="required" data-rule-minlength="6" data-msg-minlength="Please enter at least 6 characters.">
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="password_confirmation" class=" col-md-2">Retype password</label>
+								<label for="password_confirmation" class=" col-md-2">再入力 パスワード</label>
 								<div class=" col-md-10">
-									<input type="password" name="password_confirmation" value="" id="password_confirmation" class="form-control" placeholder="Retype password" autocomplete="off" required="required" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
+									<input type="password" name="password_confirmation" value="" id="password_confirmation" class="form-control" placeholder="再入力 パスワード" autocomplete="off" required="required" data-rule-equalto="#password" data-msg-equalto="Please enter the same value again.">
 								</div>
 							</div>
 						</div>
 						<div class="panel-footer">
-							<button type="submit" class="btn btn-primary"><span class="fa fa-check-circle"></span> Change Password</button>
+							<button type="submit" class="btn btn-primary"><span class="fa fa-check-circle"></span> パスワードを変更する</button>
 						</div>
 					</div>
 				</form>

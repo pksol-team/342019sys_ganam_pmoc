@@ -321,7 +321,7 @@ class EmployeesController extends Controller
 		$user->password = bcrypt($request->password);
 		$user->save();
 		
-		\Session::flash('success_message', 'Password is successfully changed');
+		\Session::flash('success_message', 'パスワードは正常に変更されました');
 		
 		// Send mail to User his new Password
 		if(env('MAIL_USERNAME') != null && env('MAIL_USERNAME') != "null" && env('MAIL_USERNAME') != "") {
