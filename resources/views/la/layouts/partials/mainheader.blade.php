@@ -5,7 +5,8 @@
 	if ($RoleTable->role_id != 1) { ?>
 		@push('scripts')
 		<script>
-			// $('ul.sidebar-menu li:nth-child(3)').css('display', 'none');
+			$('ul.sidebar-menu li:nth-child(3)').css('display', 'none');
+			$('ul.sidebar-menu li:nth-child(5)').css('display', 'none');
 		</script>
 		@endpush
 	<?php } ?>

@@ -67,56 +67,115 @@ class Sample_case_ScreensController extends Controller
 
 	public function import()
 	{
-		$module = Module::get('Sample_case_Screens');
-			return View('la.sample_case_screens.import', [
-				'module' => $module
+		if (Auth::user()->id == 1) {
+			$module = Module::get('Sample_case_Screens');
+				return View('la.sample_case_screens.import', [
+					'module' => $module
 			]);
+		} else {
+            return redirect(config('laraadmin.adminRoute')."/");
+		}
+
 	}
 
 	public function imported(Request $request){
         //validate the xls file
-        $this->validate($request, array(
-            'file'      => 'required'
-        ));
- 
-        if($request->hasFile('file')){
-            $extension = File::extension($request->file->getClientOriginalName());
-            if ($extension == "xlsx" || $extension == "xls" || $extension == "csv") {
- 
-                $path = $request->file->getRealPath();
-                $data = Excel::load($path, function($reader) {
-                })->get();
-                if(!empty($data) && $data->count()){
+		if (Auth::user()->id == 1) {
+	        $this->validate($request, array(
+	            'file'      => 'required'
+	        ));
+	 
+	        if($request->hasFile('file')){
+	            $extension = File::extension($request->file->getClientOriginalName());
+	            if ($extension == "xlsx") {
 
- 
-                    foreach ($data as $key => $value) {
-                    	
-                        $insert[] = [
-                        'customer_name' => $value->customer_name,
-                        'record_type' => $value->record_type
-                        ];
-                    }
-                	var_dump($data);
-                	exit();
-                    if(!empty($insert)){
- 
-                        $insertData = DB::table('sample_case_screens')->insert($insert);
-                        if ($insertData) {
-                            Session::flash('success', 'Your Data has successfully imported');
-                        }else {                        
-                            Session::flash('error', 'Error inserting the data..');
-                            return back();
-                        }
-                    }
-                }
- 
-                return back();
- 
-            }else {
-                Session::flash('error', 'File is a '.$extension.' file.!! Please upload a valid xls/csv file..!!');
-                return back();
-            }
-        }
+	                $filepath = $request->file->getRealPath();
+	            	$excel = Importer::make('Excel');
+	            	$excel->load($filepath);
+	            	$collections = $excel->getCollection();
+	            	if (count($collections) != 0) {
+		            	foreach ($collections as $key => $collection) {
+
+		            		if ($key == 0)
+		        			continue;
+		        			$newStop = ($collection[13] == true) ? 'True': 'False';
+		        			$newReserved = ($collection[14] == true) ? 'True': 'False';
+		        			$newCase_close_check = ($collection[15] == true) ? 'True': 'False';
+
+		            		$row = [
+				              'customer_name' => $collection[0],
+				              'record_type' => $collection[1],
+				              'case_name' => $collection[2],
+				              'task_name' => $collection[3],
+				              'grant_total' => $collection[4],
+				              'target_name' => $collection[5],
+				              'content_preparation' => $collection[6],
+				              'application_amount' => $collection[9],
+				              'stop' => $newStop,
+				              'reserved' => $newReserved,
+				              'case_close_check' => $newCase_close_check,
+				              'remarks' => $collection[16]
+		                    ];
+
+
+		            		if (is_object($collection[7]) && get_class($collection[7]) == 'DateTime') {
+			            		$row['project_proposal_day'] = $collection[7]->format('Y-m-d');
+		                	} else {
+		                		$row['project_proposal_day'] = '';
+		                	}
+		                	if (is_object($collection[8]) && get_class($collection[8]) == 'DateTime') {
+			            		$row['expiration_date'] = $collection[8]->format('Y-m-d');
+		                	} else {
+		                		$row['expiration_date'] = '';
+		                	}
+		                	if (is_object($collection[10]) && get_class($collection[10]) == 'DateTime') {
+			            		$row['scheduled_date_1'] = $collection[10]->format('Y-m-d');
+		                	} else {
+		                		$row['scheduled_date_1'] = '';
+		                	}
+		                	if (is_object($collection[11]) && get_class($collection[11]) == 'DateTime') {
+			            		$row['scheduled_date_2'] = $collection[11]->format('Y-m-d');
+		                	} else {
+		                		$row['scheduled_date_2'] = '';
+		                	}
+		                	if (is_object($collection[12]) && get_class($collection[12]) == 'DateTime') {
+			            		$row['scheduled_date_3'] = $collection[12]->format('Y-m-d');
+		                	} else {
+		                		$row['scheduled_date_3'] = '';
+		                	}
+		                	if (is_object($collection[17]) && get_class($collection[17]) == 'DateTime') {
+			            		$row['final_update_date'] = $collection[17]->format('Y-m-d');
+		                	} else {
+		                		$row['final_update_date'] = '';
+		                	}
+
+		            		$insert[] = $row;
+
+		                }
+		                if(!empty($insert)){
+
+	                        $insertData = DB::table('sample_case_screens')->insert($insert);
+	                        if ($insertData) {
+	                            Session::flash('success', 'あなたのデータは正常にインポートされました');
+	                        }else {                        
+	                            Session::flash('error', 'データ挿入エラー..');
+	                            return back();
+	                        }
+		                }
+
+	            	} else {
+		                Session::flash('error', 'あなたのファイルは空です..!!');
+	            	}
+	                return back();
+	 
+	            }else {
+	                Session::flash('error', 'ファイルは '.$extension.' ファイルです.!! 有効なxlxsファイルをアップロードしてください..!!');
+	                return back();
+	            }
+	        }
+        } else {
+            return redirect(config('laraadmin.adminRoute')."/");
+		}
     }
 
 	/**

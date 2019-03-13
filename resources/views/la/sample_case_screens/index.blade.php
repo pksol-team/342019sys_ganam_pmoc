@@ -17,7 +17,7 @@
 
 <div class="message-show">
 	<div class="message-show-message">
-		<p>Hello XXX Corporation</p>
+		<p>Hello <?= Auth::user()->name ?></p>
 		<p>Message</p>
 	</div>
 	<div class="message-show-inner">
@@ -47,7 +47,9 @@
 			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
 			@endforeach
 			@if($show_actions)
-			<th>行動</th>
+				<?php if (Auth::user()->id == 1): ?>
+					<th>行動</th>
+				<?php endif ?>
 			@endif
 		</tr>
 		</thead>
