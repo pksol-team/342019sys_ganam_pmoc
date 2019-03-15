@@ -24,6 +24,10 @@ use App\Models\Employee;
 use App\Role;
 use Mail;
 use Log;
+use Excel;
+use File;
+use Importer;
+use Session;
 
 class EmployeesController extends Controller
 {
@@ -52,16 +56,21 @@ class EmployeesController extends Controller
 	public function index()
 	{
 		$module = Module::get('Employees');
+		if (Auth::user()->id == 1) {
+			if(Module::hasAccess($module->id)) {
+				return View('la.employees.index', [
+					'show_actions' => $this->show_action,
+					'listing_cols' => $this->listing_cols,
+					'module' => $module
+				]);
+			} else {
+	            return redirect(config('laraadmin.adminRoute')."/");
+	        }
 		
-		if(Module::hasAccess($module->id)) {
-			return View('la.employees.index', [
-				'show_actions' => $this->show_action,
-				'listing_cols' => $this->listing_cols,
-				'module' => $module
-			]);
 		} else {
             return redirect(config('laraadmin.adminRoute')."/");
-        }
+		}
+		
 	}
 
 	/**
@@ -73,6 +82,103 @@ class EmployeesController extends Controller
 	{
 		//
 	}
+
+	public function import()
+	{
+		if (Auth::user()->id == 1) {
+			$module = Module::get('Employees');
+				return View('la.employees.import', [
+					'module' => $module
+			]);
+		} else {
+            return redirect(config('laraadmin.adminRoute')."/");
+		}
+
+	}
+
+	public function imported(Request $request){
+        //validate the xls file
+		if (Auth::user()->id == 1) {
+	        $this->validate($request, array(
+	            'file'      => 'required'
+	        ));
+	 
+	        if($request->hasFile('file')){
+	            $extension = File::extension($request->file->getClientOriginalName());
+	            if ($extension == "xlsx") {
+
+	                $filepath = $request->file->getRealPath();
+	            	$excel = Importer::make('Excel');
+	            	$excel->load($filepath);
+	            	$collections = $excel->getCollection();
+	            	if (count($collections) != 0) {
+						$error = '';
+		            	foreach ($collections as $key => $collection) {
+
+		            		if ($key == 0)
+		            		{
+
+		            		} else {
+			            		$rowEmployee = [
+					              'name' => $collection[0],
+					              'email' => $collection[1],
+					              'message_1' => $collection[3],
+					              'message_2' => $collection[4],
+					              'message_3' => $collection[5]
+			                    ];
+
+            	                if(!empty($rowEmployee)){
+
+        							$EmailCheck = DB::table('employees')->WHERE('email', $rowEmployee['email'])->whereNull('deleted_at')->count();
+        							if ($EmailCheck > 0 || $collection[0] == '' || $collection[1] == '' || $collection[2] == '') {
+        								$error .= 'データ挿入エラー 行番号をチェック'.strval($key+1).'（電子メールは既に存在するか空のセル）.. <br>';
+										Session::flash('error', $error);
+        	                            continue;
+        							} else {
+
+        								$insertData = DB::table('employees')->insert($rowEmployee);
+        								$InsertID = DB::getPdo()->lastInsertId();
+        								if ($insertData) {
+        									$user = User::create([
+        										'name' => $collection[0],
+        										'email' => $collection[1],
+        										'password' => bcrypt($collection[2]),
+        										'context_id' => $InsertID,
+        										'type' => "Employee",
+        									]);
+
+        									DB::table('role_user')->insert([
+        										'user_id' => $InsertID,
+        										'role_id' => 2
+        									]);
+        								    Session::flash('success', 'あなたのデータは正常にインポートされました');
+        								}else {                        
+											Session::flash('error', $error);
+        								    return back();
+        								}
+
+        							}
+            	                } else {
+					                Session::flash('error', 'あなたのファイルは空です..!!');
+								    return back();
+            	                }
+		            			
+		            		}
+		                }
+		                return back();
+	            	} else {
+		                Session::flash('error', 'あなたのファイルは空です..!!');
+	            	}
+	 
+	            }else {
+	                Session::flash('error', 'ファイルは '.$extension.' ファイルです.!! 有効なxlxsファイルをアップロードしてください..!!');
+	                return back();
+	            }
+	        }
+        } else {
+            return redirect(config('laraadmin.adminRoute')."/");
+		}
+    }
 
 	/**
 	 * Store a newly created employee in database.
@@ -328,7 +434,7 @@ class EmployeesController extends Controller
 			// Send mail to User his new Password
 			Mail::send('emails.send_login_cred_change', ['user' => $user, 'password' => $request->password], function ($m) use ($user) {
 				$m->from(LAConfigs::getByKey('default_email'), LAConfigs::getByKey('sitename'));
-				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials chnaged');
+				$m->to($user->email, $user->name)->subject('LaraAdmin - Login Credentials changed');
 			});
 		} else {
 			Log::info("User change_password: username: ".$user->email." Password: ".$request->password);

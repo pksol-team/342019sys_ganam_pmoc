@@ -30,10 +30,9 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				{!! Form::model($employee, ['route' => [config('laraadmin.adminRoute') . '.employees.update', $employee->id ], 'method'=>'PUT', 'id' => 'employee-edit-form']) !!}
-					{{--
 					@la_form($module)
-					--}}
 					
+					{{--
 					@la_input($module, 'name')
 					@la_input($module, 'gender')
 					@la_input($module, 'mobile')
@@ -43,6 +42,7 @@
 					@la_input($module, 'address')
 					@la_input($module, 'about')
 					@la_input($module, 'date_birth')
+					--}}
                     <div class="form-group">
 						<label for="role">Role* :</label>
 						<select class="form-control" required="1" data-placeholder="Select Role" rel="select2" name="role">

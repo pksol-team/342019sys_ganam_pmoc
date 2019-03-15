@@ -1,8 +1,8 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "ケース画面")
+@section("contentheader_title", "ユーザー")
 @section("contentheader_description", "インポート")
-@section("section", "ケース画面")
+@section("section", "ユーザー")
 @section("sub_section", "インポート")
 @section("htmlheader_title", "インポート")
 
@@ -24,7 +24,7 @@
             <span aria-hidden="true">×</span>
             <span class="sr-only">閉じる</span>
         </button>
-        <strong>{{ Session::get('error') }}</strong>
+        <strong>{!! Session::get('error') !!}</strong>
     </div>
     @endif
  
@@ -39,7 +39,7 @@
 </div>
 @endif
  
-<form action="/imported" method="POST" enctype="multipart/form-data">
+<form action="/importeduser" method="POST" enctype="multipart/form-data">
     {{ csrf_field() }}
     xlxs ファイル : <input type="file" name="file" class="form-control">
     <input type="submit" class="btn btn-primary btn-lg" style="margin-top: 3%" value="インポート">

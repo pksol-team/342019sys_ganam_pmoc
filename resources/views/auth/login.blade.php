@@ -23,7 +23,7 @@
     @endif
 
     <div class="login-box-body">
-    <p class="login-box-msg">サインインしてセッションを開始してください</p>
+    <p class="login-box-msg">サインインしてください。</p>
     <form action="{{ url('/login') }}" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <div class="form-group has-feedback">
@@ -38,7 +38,7 @@
             <div class="col-xs-8">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" name="remember"> 私を覚えてますか
+                        <input type="checkbox" name="remember"> Eメール・パスワードを保存する
                     </label>
                 </div>
             </div><!-- /.col -->

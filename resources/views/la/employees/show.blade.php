@@ -1,7 +1,7 @@
 @extends('la.layouts.app')
 
 @section('htmlheader_title')
-	Employee View
+	社員ビュー
 @endsection
 
 

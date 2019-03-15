@@ -1,9 +1,9 @@
 @extends("la.layouts.app")
 
-@section("contentheader_title", "ケース画面")
-@section("contentheader_description", "ケース画面 リスティング")
-@section("section", "ケース画面")
-@section("sub_section", "リスティング")
+@section("contentheader_title", "案件")
+@section("contentheader_description", "案件　リスティング")
+@section("section", "案件　リスティング")
+@section("sub_section", "案件　リスティング")
 @section("htmlheader_title", "ケース画面 リスティング")
 
 @section("headerElems")
@@ -17,12 +17,22 @@
 
 <div class="message-show">
 	<div class="message-show-message">
-		<p>Hello <?= Auth::user()->name ?></p>
-		<p>Message</p>
+		<p><?= Auth::user()->name ?></p>
+		<p>メッセージ</p>
 	</div>
 	<div class="message-show-inner">
-		<p class="message-show-inner-p">· Information on new subsidy "XX"</p>
-		<p class="message-show-inner-p">· Please prepare XX documents as soon as possible!</p>
+		<?php 
+			$CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
+			if ($CurrentUser->message_1 != '') {
+				echo "<p class='message-show-inner-p'>".$CurrentUser->message_1."</p>";
+			}
+			if ($CurrentUser->message_2 != '') {
+				echo "<p class='message-show-inner-p'>".$CurrentUser->message_2."</p>";
+			}
+			if ($CurrentUser->message_3 != '') {
+				echo "<p class='message-show-inner-p'>".$CurrentUser->message_3."</p>";
+			}
+		?>
 	</div>
 	
 </div>
@@ -37,27 +47,58 @@
         </ul>
     </div>
 @endif
-<div class="box box-success">
-	<!--<div class="box-header"></div>-->
-	<div class="box-body">
-		<table id="example1" class="table table-bordered">
-		<thead>
-		<tr class="success">
-			@foreach( $listing_cols as $col )
-			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
-			@endforeach
-			@if($show_actions)
-				<?php if (Auth::user()->id == 1): ?>
-					<th>行動</th>
-				<?php endif ?>
-			@endif
-		</tr>
-		</thead>
-		<tbody>
-			
-		</tbody>
-		</table>
-	</div>
+<div id="exTab1">
+   <ul class="nav nav-tabs">
+      <li class="active"><a  href="#completed_tab" data-toggle="tab">Application completed</a></li>
+      <li><a href="#processing_tab" data-toggle="tab">Processing</a></li>
+   </ul>
+   <div class="tab-content ">
+      <div class="tab-pane active" id="completed_tab">
+         <div class="box box-success">
+         	<!--<div class="box-header"></div>-->
+         	<div class="box-body">
+         		<table id="example1" class="table table-bordered">
+         		<thead>
+         		<tr class="success">
+         			@foreach( $listing_cols as $col )
+         			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+         			@endforeach
+         			@if($show_actions)
+         				<?php if (Auth::user()->id == 1): ?>
+         					<th>行動</th>
+         				<?php endif ?>
+         			@endif
+         		</tr>
+         		</thead>
+         		<tbody>
+         			
+         		</tbody>
+         		</table>
+         	</div>
+         </div>
+      </div>
+      <div class="tab-pane" id="processing_tab">
+         <div class="box-body">
+     		<table id="example2" class="table table-bordered">
+     		<thead>
+     		<tr class="success">
+     			@foreach( $listing_cols as $col )
+     			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+     			@endforeach
+     			@if($show_actions)
+     				<?php if (Auth::user()->id == 1): ?>
+     					<th>行動</th>
+     				<?php endif ?>
+     			@endif
+     		</tr>
+     		</thead>
+     		<tbody>
+     			
+     		</tbody>
+     		</table>
+     	</div>
+      </div>
+   </div>
 </div>
 
 @la_access("Sample_case_Screens", "create")
@@ -131,6 +172,23 @@ $(function () {
 		@endif
 	});
 	$("#example1").attr('style', 'width:6000px;');
+
+	$("#example2").DataTable({
+		processing: true,
+        serverSide: true,
+        ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax2') }}",
+		language: {
+			lengthMenu: "_MENU_",
+			search: "_INPUT_",
+			searchPlaceholder: "サーチ",
+            url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json"
+			
+		},
+		@if($show_actions)
+		columnDefs: [ { orderable: false, targets: [-1] }],
+		@endif
+	});
+	$("#example2").attr('style', 'width:6000px;');
 	$("#sample_case_screen-add-form").validate({
 		
 	});

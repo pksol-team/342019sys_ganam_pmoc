@@ -31,7 +31,7 @@ class Sample_case_ScreensController extends Controller
 {
 	public $show_action = true;
 	public $view_col = 'customer_name';
-	public $listing_cols = ['id', 'customer_name', 'record_type', 'case_name', 'task_name', 'grant_total', 'target_name', 'content_preparation', 'project_proposal_day', 'expiration_date', 'application_amount', 'scheduled_date_1', 'scheduled_date_2', 'scheduled_date_3', 'stop', 'reserved', 'case_close_check', 'remarks', 'final_update_date'];
+	public $listing_cols = ['id', 'customer_name', 'record_type', 'case_name', 'grant_total', 'target_name', 'content_preparation', 'project_proposal_day', 'expiration_date', 'application_amount', 'scheduled_date_1', 'scheduled_date_2', 'scheduled_date_3', 'stop', 'reserved', 'case_close_check', 'remarks', 'final_update_date'];
 	
 	public function __construct() {
 		// Field Access of Listing Columns
@@ -334,9 +334,56 @@ class Sample_case_ScreensController extends Controller
 		$userName = Auth::user()->name;
         $Role_User = DB::table('role_user')->WHERE('user_id', $user_Id)->first();
 		if ($Role_User->role_id != 1) {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('customer_name', $userName)->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'null']])->orderBy('id','DESC');
 		} else {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'null')->orderBy('id','DESC');
+		}
+		$out = Datatables::of($values)->make();
+		$data = $out->getData();
+
+		$fields_popup = ModuleFields::getModuleFields('Sample_case_Screens');
+		
+		for($i=0; $i < count($data->data); $i++) {
+			for ($j=0; $j < count($this->listing_cols); $j++) { 
+				$col = $this->listing_cols[$j];
+				if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
+					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
+				}
+				if($col == $this->view_col) {
+					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/sample_case_screens/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+				}
+				// else if($col == "author") {
+				//    $data->data[$i][$j];
+				// }
+			}
+			
+			if($this->show_action) {
+				$output = '';
+				if(Module::hasAccess("Sample_case_Screens", "edit")) {
+					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/sample_case_screens/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
+				}
+				
+				if(Module::hasAccess("Sample_case_Screens", "delete")) {
+					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.sample_case_screens.destroy', $data->data[$i][0]], 'method' => 'delete', 'onsubmit'=> 'return confirm("消去してもよろしいですか?")',  'style'=>'display:inline']);
+					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
+					$output .= Form::close();
+				}
+				$data->data[$i][] = (string)$output;
+			}
+		}
+		$out->setData($data);
+		return $out;
+	}
+
+	public function dtajax2()
+	{
+		$user_Id = Auth::user()->id;
+		$userName = Auth::user()->name;
+        $Role_User = DB::table('role_user')->WHERE('user_id', $user_Id)->first();
+		if ($Role_User->role_id != 1) {
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'クローズ']])->orderBy('id','DESC');
+		} else {
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'クローズ')->orderBy('id','DESC');
 		}
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();

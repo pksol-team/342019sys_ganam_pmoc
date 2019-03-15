@@ -33,6 +33,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('la.dashboard');
+        // return view('la.dashboard');
+        return redirect(config('laraadmin.adminRoute')."/sample_case_screens");
     }
 }

@@ -4,6 +4,7 @@
 // Route::get('/', 'HomeController@index');
 Route::get('/', 'LA\DashboardController@index');
 Route::post('/imported', 'LA\Sample_case_ScreensController@imported');
+Route::post('/importeduser', 'LA\EmployeesController@imported');
 
 Route::auth();
 
@@ -82,9 +83,11 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	/* ================== Sample_case_Screens ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/sample_case_screens', 'LA\Sample_case_ScreensController');
 	Route::get(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax', 'LA\Sample_case_ScreensController@dtajax');
+	Route::get(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax2', 'LA\Sample_case_ScreensController@dtajax2');
 
 	/* ================== Import Excel ================== */
 
-	Route::resource(config('laraadmin.adminRoute') . '/import', 'LA\Sample_case_ScreensController@import');
+	Route::resource(config('laraadmin.adminRoute') . '/import_case', 'LA\Sample_case_ScreensController@import');
+	Route::resource(config('laraadmin.adminRoute') . '/import_user', 'LA\EmployeesController@import');
 
 });
