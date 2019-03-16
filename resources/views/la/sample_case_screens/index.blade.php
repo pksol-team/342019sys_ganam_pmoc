@@ -20,21 +20,23 @@
 		<p><?= Auth::user()->name ?></p>
 		<p>メッセージ</p>
 	</div>
-	<div class="message-show-inner">
-		<?php 
-			$CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
-			if ($CurrentUser->message_1 != '') {
-				echo "<p class='message-show-inner-p'>".$CurrentUser->message_1."</p>";
-			}
-			if ($CurrentUser->message_2 != '') {
-				echo "<p class='message-show-inner-p'>".$CurrentUser->message_2."</p>";
-			}
-			if ($CurrentUser->message_3 != '') {
-				echo "<p class='message-show-inner-p'>".$CurrentUser->message_3."</p>";
-			}
-		?>
-	</div>
-	
+	<?php 
+	$CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
+	if ($CurrentUser->message_1 != ''): ?>
+		<div class="message-show-inner">
+			<?php 
+				if ($CurrentUser->message_1 != '') {
+					echo "<p class='message-show-inner-p'>".$CurrentUser->message_1."</p>";
+				}
+				if ($CurrentUser->message_2 != '') {
+					echo "<p class='message-show-inner-p'>".$CurrentUser->message_2."</p>";
+				}
+				if ($CurrentUser->message_3 != '') {
+					echo "<p class='message-show-inner-p'>".$CurrentUser->message_3."</p>";
+				}
+			?>
+		</div>
+	<?php endif ?>
 </div>
 <?php endif ?>
 
@@ -49,13 +51,12 @@
 @endif
 <div id="exTab1">
    <ul class="nav nav-tabs">
-      <li class="active"><a  href="#completed_tab" data-toggle="tab">Application completed</a></li>
-      <li><a href="#processing_tab" data-toggle="tab">Processing</a></li>
+      <li class="active"><a  href="#completed_tab" data-toggle="tab">申し込み完了</a></li>
+      <li><a href="#processing_tab" data-toggle="tab">処理</a></li>
    </ul>
    <div class="tab-content ">
       <div class="tab-pane active" id="completed_tab">
          <div class="box box-success">
-         	<!--<div class="box-header"></div>-->
          	<div class="box-body">
          		<table id="example1" class="table table-bordered">
          		<thead>
@@ -78,6 +79,7 @@
          </div>
       </div>
       <div class="tab-pane" id="processing_tab">
+        <div class="box box-success">
          <div class="box-body">
      		<table id="example2" class="table table-bordered">
      		<thead>
@@ -96,6 +98,7 @@
      			
      		</tbody>
      		</table>
+     	 </div>
      	</div>
       </div>
    </div>
@@ -171,7 +174,6 @@ $(function () {
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#example1").attr('style', 'width:6000px;');
 
 	$("#example2").DataTable({
 		processing: true,
@@ -188,10 +190,14 @@ $(function () {
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#example2").attr('style', 'width:6000px;');
-	$("#sample_case_screen-add-form").validate({
-		
-	});
+	$("#example1, #example2").attr('style', 'width:6000px;');
+	
+	$("#sample_case_screen-add-form").validate({});
+
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		$("#example1, #example2").attr('style', 'width:6000px;');
+    });
+
 });
 </script>
 @endpush

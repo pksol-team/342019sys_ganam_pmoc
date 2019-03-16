@@ -33,7 +33,7 @@ class EmployeesController extends Controller
 {
 	public $show_action = true;
 	public $view_col = 'name';
-	public $listing_cols = ['id', 'name', 'mobile', 'email'];
+	public $listing_cols = ['id', 'name', 'email', 'message_1', 'message_2', 'message_3'];
 	
 	public function __construct() {
 		
@@ -112,6 +112,9 @@ class EmployeesController extends Controller
 	            	$excel->load($filepath);
 	            	$collections = $excel->getCollection();
 	            	if (count($collections) != 0) {
+						$DeleteEmp = DB::table('employees')->WHERE('id', '!=', '1')->delete();
+						$DeleteUser = DB::table('users')->WHERE('id', '!=', '1')->delete();
+						$DeleteRole = DB::table('role_user')->WHERE('user_id', '!=', '1')->delete();
 						$error = '';
 		            	foreach ($collections as $key => $collection) {
 
@@ -129,11 +132,16 @@ class EmployeesController extends Controller
 
             	                if(!empty($rowEmployee)){
 
-        							$EmailCheck = DB::table('employees')->WHERE('email', $rowEmployee['email'])->whereNull('deleted_at')->count();
-        							if ($EmailCheck > 0 || $collection[0] == '' || $collection[1] == '' || $collection[2] == '') {
-        								$error .= 'データ挿入エラー 行番号をチェック'.strval($key+1).'（電子メールは既に存在するか空のセル）.. <br>';
+        							if ($collection[0] == '' || $collection[1] == '' || $collection[2] == '') {
+        								$error .= 'データ挿入エラー 行番号をチェック'.strval($key+1).'（エラーを修正して再度アップロードする）.. <br>';
 										Session::flash('error', $error);
         	                            continue;
+        							} elseif (strlen($collection[0]) < 3 || filter_var($collection[1], FILTER_VALIDATE_EMAIL) == FALSE || strlen($collection[2]) < 6) {
+
+        								$error .= 'データ挿入エラー 行番号をチェック'.strval($key+1).'（エラーを修正して再度アップロードする）.. <br>';
+										Session::flash('error', $error);
+        	                            continue;
+
         							} else {
 
         								$insertData = DB::table('employees')->insert($rowEmployee);
@@ -156,7 +164,6 @@ class EmployeesController extends Controller
 											Session::flash('error', $error);
         								    return back();
         								}
-
         							}
             	                } else {
 					                Session::flash('error', 'あなたのファイルは空です..!!');
@@ -395,7 +402,7 @@ class EmployeesController extends Controller
 				}
 				
 				if(Module::hasAccess("Employees", "delete")) {
-					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
+					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.employees.destroy', $data->data[$i][0]], 'method' => 'delete', 'onsubmit'=> 'return confirm("消去してもよろしいですか?")', 'style'=>'display:inline']);
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
 					$output .= Form::close();
 				}

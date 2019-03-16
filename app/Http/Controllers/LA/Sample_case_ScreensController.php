@@ -31,7 +31,7 @@ class Sample_case_ScreensController extends Controller
 {
 	public $show_action = true;
 	public $view_col = 'customer_name';
-	public $listing_cols = ['id', 'customer_name', 'record_type', 'case_name', 'grant_total', 'target_name', 'content_preparation', 'project_proposal_day', 'expiration_date', 'application_amount', 'scheduled_date_1', 'scheduled_date_2', 'scheduled_date_3', 'stop', 'reserved', 'case_close_check', 'remarks', 'final_update_date'];
+	public $listing_cols = ['id', 'item_id', 'customer_name', 'record_type', 'case_name', 'grant_total', 'target_name', 'content_preparation', 'project_proposal_day', 'expiration_date', 'application_amount', 'scheduled_date_1', 'scheduled_date_2', 'scheduled_date_3', 'stop', 'reserved', 'case_close_check', 'item_close', 'remarks', 'final_update_date'];
 	
 	public function __construct() {
 		// Field Access of Listing Columns
@@ -94,57 +94,61 @@ class Sample_case_ScreensController extends Controller
 	            	$excel->load($filepath);
 	            	$collections = $excel->getCollection();
 	            	if (count($collections) != 0) {
+            		$emptyTable = DB::table('sample_case_screens')->truncate();
 		            	foreach ($collections as $key => $collection) {
 
 		            		if ($key == 0)
 		        			continue;
-		        			$newStop = ($collection[13] == true) ? 'True': 'False';
-		        			$newReserved = ($collection[14] == true) ? 'True': 'False';
-		        			$newCase_close_check = ($collection[15] == true) ? 'True': 'False';
+
+		        			$newStop = ($collection[14] == true) ? '済': 'null';
+		        			$newReserved = ($collection[15] == true) ? '中止': 'null';
+		        			$newCase_close_check = ($collection[16] == true) ? '中止': 'null';
+		        			$item_close = ($collection[17] == true) ? 'クローズ': 'null';
 
 		            		$row = [
-				              'customer_name' => $collection[0],
-				              'record_type' => $collection[1],
-				              'case_name' => $collection[2],
-				              'task_name' => $collection[3],
-				              'grant_total' => $collection[4],
-				              'target_name' => $collection[5],
-				              'content_preparation' => $collection[6],
-				              'application_amount' => $collection[9],
+				              'item_Id' => $collection[0],
+				              'customer_name' => $collection[1],
+				              'record_type' => $collection[2],
+				              'case_name' => $collection[3],
+				              'task_name' => $collection[4],
+				              'grant_total' => $collection[5],
+				              'target_name' => $collection[6],
+				              'content_preparation' => $collection[7],
+				              'application_amount' => $collection[10],
 				              'stop' => $newStop,
 				              'reserved' => $newReserved,
 				              'case_close_check' => $newCase_close_check,
-				              'remarks' => $collection[16]
+				              'item_close' => $item_close,
+				              'remarks' => $collection[18]
 		                    ];
 
-
-		            		if (is_object($collection[7]) && get_class($collection[7]) == 'DateTime') {
-			            		$row['project_proposal_day'] = $collection[7]->format('Y-m-d');
+		            		if (is_object($collection[8]) && get_class($collection[8]) == 'DateTime') {
+			            		$row['project_proposal_day'] = $collection[8]->format('Y-m-d');
 		                	} else {
 		                		$row['project_proposal_day'] = '';
 		                	}
-		                	if (is_object($collection[8]) && get_class($collection[8]) == 'DateTime') {
-			            		$row['expiration_date'] = $collection[8]->format('Y-m-d');
+		                	if (is_object($collection[9]) && get_class($collection[9]) == 'DateTime') {
+			            		$row['expiration_date'] = $collection[9]->format('Y-m-d');
 		                	} else {
 		                		$row['expiration_date'] = '';
 		                	}
-		                	if (is_object($collection[10]) && get_class($collection[10]) == 'DateTime') {
-			            		$row['scheduled_date_1'] = $collection[10]->format('Y-m-d');
+		                	if (is_object($collection[11]) && get_class($collection[11]) == 'DateTime') {
+			            		$row['scheduled_date_1'] = $collection[11]->format('Y-m-d');
 		                	} else {
 		                		$row['scheduled_date_1'] = '';
 		                	}
-		                	if (is_object($collection[11]) && get_class($collection[11]) == 'DateTime') {
-			            		$row['scheduled_date_2'] = $collection[11]->format('Y-m-d');
+		                	if (is_object($collection[12]) && get_class($collection[12]) == 'DateTime') {
+			            		$row['scheduled_date_2'] = $collection[12]->format('Y-m-d');
 		                	} else {
 		                		$row['scheduled_date_2'] = '';
 		                	}
-		                	if (is_object($collection[12]) && get_class($collection[12]) == 'DateTime') {
-			            		$row['scheduled_date_3'] = $collection[12]->format('Y-m-d');
+		                	if (is_object($collection[13]) && get_class($collection[13]) == 'DateTime') {
+			            		$row['scheduled_date_3'] = $collection[13]->format('Y-m-d');
 		                	} else {
 		                		$row['scheduled_date_3'] = '';
 		                	}
-		                	if (is_object($collection[17]) && get_class($collection[17]) == 'DateTime') {
-			            		$row['final_update_date'] = $collection[17]->format('Y-m-d');
+		                	if (is_object($collection[19]) && get_class($collection[19]) == 'DateTime') {
+			            		$row['final_update_date'] = $collection[19]->format('Y-m-d');
 		                	} else {
 		                		$row['final_update_date'] = '';
 		                	}
@@ -334,9 +338,9 @@ class Sample_case_ScreensController extends Controller
 		$userName = Auth::user()->name;
         $Role_User = DB::table('role_user')->WHERE('user_id', $user_Id)->first();
 		if ($Role_User->role_id != 1) {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'null']])->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'null']])->orderBy('expiration_date','DESC');
 		} else {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'null')->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'null')->orderBy('expiration_date','DESC');
 		}
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
@@ -381,9 +385,9 @@ class Sample_case_ScreensController extends Controller
 		$userName = Auth::user()->name;
         $Role_User = DB::table('role_user')->WHERE('user_id', $user_Id)->first();
 		if ($Role_User->role_id != 1) {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'クローズ']])->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'クローズ']])->orderBy('expiration_date','DESC');
 		} else {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'クローズ')->orderBy('id','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'クローズ')->orderBy('expiration_date','DESC');
 		}
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
@@ -411,7 +415,7 @@ class Sample_case_ScreensController extends Controller
 				}
 				
 				if(Module::hasAccess("Sample_case_Screens", "delete")) {
-					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.sample_case_screens.destroy', $data->data[$i][0]], 'method' => 'delete', 'onsubmit'=> 'return confirm("消去してもよろしいですか?")',  'style'=>'display:inline']);
+					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.sample_case_screens.destroy', $data->data[$i][0]], 'method' => 'delete', 'onsubmit'=> 'return confirm("消去してもよろしいですか?")', 'style'=>'display:inline']);
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
 					$output .= Form::close();
 				}
