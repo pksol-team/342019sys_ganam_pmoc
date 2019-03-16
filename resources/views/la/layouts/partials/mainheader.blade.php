@@ -14,13 +14,13 @@
 
 	@if(LAConfigs::getByKey('layout') != 'layout-top-nav')
 	<!-- Logo -->
-	<a href="{{ url(config('laraadmin.adminRoute')) }}" class="logo" style="text-align: left">
+	<a href="{{ url(config('laraadmin.adminRoute')) }}" class="logo" style="text-align: center">
 		<!-- mini logo for sidebar mini 50x50 pixels -->
 		<!-- <span class="logo-mini"><b>{{ LAConfigs::getByKey('sitename_short') }}</b></span> -->
 		<!-- logo for regular state and mobile devices -->
 		<!-- <span class="logo-lg"><b>{{ LAConfigs::getByKey('sitename_part1') }}</b> -->
 		 <!-- {{ LAConfigs::getByKey('sitename_part2') }}</span> -->
-		 <img src="/la-assets/img/logo-small.png" width="175" class="img" height="45" alt="Rose Group" />
+		 <img src="/la-assets/img/logo-small.png" width="40" class="img"  alt="Rose Group" />
 
 	</a>
 	@endif

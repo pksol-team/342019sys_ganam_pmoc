@@ -51,8 +51,8 @@
 @endif
 <div id="exTab1">
    <ul class="nav nav-tabs">
-      <li class="active"><a  href="#completed_tab" data-toggle="tab">申し込み完了</a></li>
-      <li><a href="#processing_tab" data-toggle="tab">処理</a></li>
+      <li class="active"><a  href="#completed_tab" data-toggle="tab">進行中</a></li>
+      <li><a href="#processing_tab" data-toggle="tab">クローズ</a></li>
    </ul>
    <div class="tab-content ">
       <div class="tab-pane active" id="completed_tab">

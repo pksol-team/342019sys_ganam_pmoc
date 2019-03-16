@@ -100,10 +100,10 @@ class Sample_case_ScreensController extends Controller
 		            		if ($key == 0)
 		        			continue;
 
-		        			$newStop = ($collection[14] == true) ? '済': 'null';
-		        			$newReserved = ($collection[15] == true) ? '中止': 'null';
-		        			$newCase_close_check = ($collection[16] == true) ? '中止': 'null';
-		        			$item_close = ($collection[17] == true) ? 'クローズ': 'null';
+		        			$newStop = ($collection[14] == true) ? '済': '';
+		        			$newReserved = ($collection[15] == true) ? '中止': '';
+		        			$newCase_close_check = ($collection[16] == true) ? '中止': '';
+		        			$item_close = ($collection[17] == true) ? 'クローズ': '';
 
 		            		$row = [
 				              'item_Id' => $collection[0],
@@ -338,9 +338,9 @@ class Sample_case_ScreensController extends Controller
 		$userName = Auth::user()->name;
         $Role_User = DB::table('role_user')->WHERE('user_id', $user_Id)->first();
 		if ($Role_User->role_id != 1) {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', 'null']])->orderBy('expiration_date','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where([['customer_name', $userName], ['item_close', '']])->orderBy('expiration_date','DESC');
 		} else {
-			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', 'null')->orderBy('expiration_date','DESC');
+			$values = DB::table('sample_case_screens')->select($this->listing_cols)->whereNull('deleted_at')->where('item_close', '')->orderBy('expiration_date','DESC');
 		}
 		$out = Datatables::of($values)->make();
 		$data = $out->getData();
