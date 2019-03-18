@@ -62,7 +62,13 @@
          		<thead>
          		<tr class="success">
          			@foreach( $listing_cols as $col )
-         			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+         				<?php if (Auth::user()->id == 1): ?>
+				            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+						<?php else: ?>
+							@if($col != 'id')
+					            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+					        @endif
+         				<?php endif ?>
          			@endforeach
          			@if($show_actions)
          				<?php if (Auth::user()->id == 1): ?>
@@ -85,7 +91,13 @@
      		<thead>
      		<tr class="success">
      			@foreach( $listing_cols as $col )
-     			<th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+     				<?php if (Auth::user()->id == 1): ?>
+			            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+					<?php else: ?>
+						@if($col != 'id')
+				            <th>{{ $module->fields[$col]['label'] or ucfirst($col) }}</th>
+				        @endif
+     				<?php endif ?>
      			@endforeach
      			@if($show_actions)
      				<?php if (Auth::user()->id == 1): ?>
@@ -168,7 +180,6 @@ $(function () {
 			search: "_INPUT_",
 			searchPlaceholder: "サーチ",
             url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json"
-			
 		},
 		@if($show_actions)
 		columnDefs: [ { orderable: false, targets: [-1] }],
@@ -178,24 +189,24 @@ $(function () {
 	$("#example2").DataTable({
 		processing: true,
         serverSide: true,
+        autoWidth: true,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax2') }}",
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
 			searchPlaceholder: "サーチ",
             url: "//cdn.datatables.net/plug-ins/1.10.19/i18n/Japanese.json"
-			
 		},
 		@if($show_actions)
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#example1, #example2").attr('style', 'width:6000px;');
+	$("#example1, #example2").attr('style', 'width:3550px;');
 	
 	$("#sample_case_screen-add-form").validate({});
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		$("#example1, #example2").attr('style', 'width:6000px;');
+		$("#example1, #example2").attr('style', 'width:3550px;');
     });
 
 });

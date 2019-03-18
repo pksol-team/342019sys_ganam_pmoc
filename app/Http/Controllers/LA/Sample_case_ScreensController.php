@@ -105,16 +105,19 @@ class Sample_case_ScreensController extends Controller
 		        			$newCase_close_check = ($collection[16] == true) ? '中止': '';
 		        			$item_close = ($collection[17] == true) ? 'クローズ': '';
 
+		        			$grant_total = number_format(floatval($collection[5]));
+		        			$application_amount = number_format(floatval($collection[10]));
+
 		            		$row = [
 				              'item_Id' => $collection[0],
 				              'customer_name' => $collection[1],
 				              'record_type' => $collection[2],
 				              'case_name' => $collection[3],
 				              'task_name' => $collection[4],
-				              'grant_total' => $collection[5],
+				              'grant_total' => $grant_total,
 				              'target_name' => $collection[6],
 				              'content_preparation' => $collection[7],
-				              'application_amount' => $collection[10],
+				              'application_amount' => $application_amount,
 				              'stop' => $newStop,
 				              'reserved' => $newReserved,
 				              'case_close_check' => $newCase_close_check,
@@ -356,6 +359,12 @@ class Sample_case_ScreensController extends Controller
 				if($col == $this->view_col) {
 					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/sample_case_screens/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
 				}
+				if ($Role_User->role_id != 1) {
+					if ($col == 'id') {
+						unset($data->data[$i][$j]);
+					    $data->data[$i] = array_values($data->data[$i]);
+					}
+				}
 				// else if($col == "author") {
 				//    $data->data[$i][$j];
 				// }
@@ -402,6 +411,13 @@ class Sample_case_ScreensController extends Controller
 				}
 				if($col == $this->view_col) {
 					$data->data[$i][$j] = '<a href="'.url(config('laraadmin.adminRoute') . '/sample_case_screens/'.$data->data[$i][0]).'">'.$data->data[$i][$j].'</a>';
+				}
+
+				if ($Role_User->role_id != 1) {
+					if ($col == 'id') {
+						unset($data->data[$i][$j]);
+					    $data->data[$i] = array_values($data->data[$i]);
+					}
 				}
 				// else if($col == "author") {
 				//    $data->data[$i][$j];
