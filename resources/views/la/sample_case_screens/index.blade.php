@@ -14,14 +14,18 @@
 
 @section("main-content")
 <?php if (Auth::user()->id != 1): ?>
+<style>
+	table tr td:nth-child(2), table tr td:nth-child(7)  {
+	    text-align: right;
+	}
+</style>
 
 <div class="message-show">
 	<div class="message-show-message">
 		<p><?= Auth::user()->name ?></p>
 		<p>メッセージ</p>
 	</div>
-	<?php 
-	$CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
+	<?php  $CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
 	if ($CurrentUser->message_1 != '' || $CurrentUser->message_2 != '' || $CurrentUser->message_3 != ''): ?>
 		<div class="message-show-inner">
 			<?php 
@@ -38,6 +42,13 @@
 		</div>
 	<?php endif ?>
 </div>
+<?php else: ?>
+	<style>
+		table tr td:nth-child(6), table tr td:nth-child(11)  {
+		    text-align: right;
+		}
+	</style>
+
 <?php endif ?>
 
 @if (count($errors) > 0)
@@ -218,7 +229,6 @@ $(function () {
 			$("#example1, #example2").attr('style', 'width:3550px;');
 		}
     });
-
 });
 </script>
 @endpush
