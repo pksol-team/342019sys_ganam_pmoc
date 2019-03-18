@@ -22,7 +22,7 @@
 	</div>
 	<?php 
 	$CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
-	if ($CurrentUser->message_1 != ''): ?>
+	if ($CurrentUser->message_1 != '' || $CurrentUser->message_2 != '' || $CurrentUser->message_3 != ''): ?>
 		<div class="message-show-inner">
 			<?php 
 				if ($CurrentUser->message_1 != '') {
@@ -174,6 +174,7 @@ $(function () {
 	$("#example1").DataTable({
 		processing: true,
         serverSide: true,
+        ordering: false,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax') }}",
 		language: {
 			lengthMenu: "_MENU_",
@@ -189,7 +190,7 @@ $(function () {
 	$("#example2").DataTable({
 		processing: true,
         serverSide: true,
-        autoWidth: true,
+        ordering: false,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax2') }}",
 		language: {
 			lengthMenu: "_MENU_",
@@ -201,12 +202,21 @@ $(function () {
 		columnDefs: [ { orderable: false, targets: [-1] }],
 		@endif
 	});
-	$("#example1, #example2").attr('style', 'width:3550px;');
+	var user = '<?= Auth::user()->id; ?>';
+	if (user != 1) {
+		$("#example1, #example2").attr('style', 'width:2068px;');
+	} else {
+		$("#example1, #example2").attr('style', 'width:3550px;');
+	}
 	
 	$("#sample_case_screen-add-form").validate({});
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		$("#example1, #example2").attr('style', 'width:3550px;');
+		if (user != 1) {
+			$("#example1, #example2").attr('style', 'width:2068px;');
+		} else {
+			$("#example1, #example2").attr('style', 'width:3550px;');
+		}
     });
 
 });
