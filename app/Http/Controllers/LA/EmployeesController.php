@@ -336,6 +336,7 @@ class EmployeesController extends Controller
 			// Update User
 			$user = User::where('context_id', $employee_id)->first();
 			$user->name = $request->name;
+			$user->email = $request->email;
 			$user->save();
 			
 			// update user role
