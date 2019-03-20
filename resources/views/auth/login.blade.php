@@ -35,14 +35,14 @@
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
         <div class="row">
-            <div class="col-xs-8">
+            <div class="col-xs-7">
                 <div class="checkbox icheck">
                     <label>
-                        <input type="checkbox" name="remember"> Eメール・パスワードを保存する
+                        <input type="checkbox" name="remember"> パスワードを保存
                     </label>
                 </div>
             </div><!-- /.col -->
-            <div class="col-xs-4">
+            <div class="col-xs-5">
                 <button type="submit" class="btn btn-primary btn-block btn-flat">サインイン</button>
             </div><!-- /.col -->
         </div>

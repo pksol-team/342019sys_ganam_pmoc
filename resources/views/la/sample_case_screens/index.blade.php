@@ -1,14 +1,12 @@
 @extends("la.layouts.app")
 
 @section("contentheader_title", "案件")
-@section("contentheader_description", "案件　リスティング")
-@section("section", "案件　リスティング")
-@section("sub_section", "案件　リスティング")
+@section("section", "案件")
 @section("htmlheader_title", "ケース画面 リスティング")
 
 @section("headerElems")
 @la_access("Sample_case_Screens", "create")
-	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">ケース追加画面</button>
+	<button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#AddModal">案件追加画面</button>
 @endla_access
 @endsection
 
@@ -22,7 +20,7 @@
 
 <div class="message-show">
 	<div class="message-show-message">
-		<p><?= Auth::user()->name ?></p>
+		<p><?= Auth::user()->name ?> 様</p>
 		<p>メッセージ</p>
 	</div>
 	<?php  $CurrentUser = DB::table('employees')->WHERE('id', Auth::user()->id)->first();
@@ -182,11 +180,17 @@
 <script src="{{ asset('la-assets/plugins/datatables/datatables.min.js') }}"></script>
 <script>
 $(function () {
+	var user = '<?= Auth::user()->id; ?>';
+	if (user != 1) {
+		var orderNo = 5;
+	} else {
+		var orderNo = 9;
+	}
 	$("#example1").DataTable({
 		processing: true,
         serverSide: true,
-        ordering: false,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax') }}",
+        order: [[ orderNo, "desc" ]],
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
@@ -201,8 +205,8 @@ $(function () {
 	$("#example2").DataTable({
 		processing: true,
         serverSide: true,
-        ordering: false,
         ajax: "{{ url(config('laraadmin.adminRoute') . '/sample_case_screen_dt_ajax2') }}",
+        order: [[ orderNo, "desc" ]],
 		language: {
 			lengthMenu: "_MENU_",
 			search: "_INPUT_",
@@ -217,7 +221,7 @@ $(function () {
 	if (user != 1) {
 		$("#example1, #example2").attr('style', 'width:2068px;');
 	} else {
-		$("#example1, #example2").attr('style', 'width:3550px;');
+		$("#example1, #example2").attr('style', 'width:4600px;');
 	}
 	
 	$("#sample_case_screen-add-form").validate({});
@@ -226,7 +230,7 @@ $(function () {
 		if (user != 1) {
 			$("#example1, #example2").attr('style', 'width:2068px;');
 		} else {
-			$("#example1, #example2").attr('style', 'width:3550px;');
+			$("#example1, #example2").attr('style', 'width:4600px;');
 		}
     });
 });
