@@ -219,18 +219,18 @@ $(function () {
 	});
 	var user = '<?= Auth::user()->id; ?>';
 	if (user != 1) {
-		$("#example1, #example2").attr('style', 'width:2068px;');
+		$("#example1, #example2").attr('style', 'width:240%;');
 	} else {
-		$("#example1, #example2").attr('style', 'width:4600px;');
+		$("#example1, #example2").attr('style', 'width:450%;');
 	}
 	
 	$("#sample_case_screen-add-form").validate({});
 
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		if (user != 1) {
-			$("#example1, #example2").attr('style', 'width:2068px;');
+			$("#example1, #example2").attr('style', 'width:240%;');
 		} else {
-			$("#example1, #example2").attr('style', 'width:4600px;');
+			$("#example1, #example2").attr('style', 'width:450%;');
 		}
     });
 });
